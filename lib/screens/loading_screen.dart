@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:weatherApp_rffrench/model/location.dart';
+import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:weatherApp_rffrench/utilities/constants.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
@@ -12,6 +15,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   @override
   void initState() {
     super.initState();
+    String apiKey = DotEnv().env['APIKEY'];
+    print(apiKey);
+    getLocation();
+  }
+
+  void getLocation() {
+    Location().getLocation();
   }
 
   @override
