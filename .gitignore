@@ -10,7 +10,7 @@
 .svn/
 
 # environment variables
-.env*
+*.env
 
 # IntelliJ related
 *.iml
