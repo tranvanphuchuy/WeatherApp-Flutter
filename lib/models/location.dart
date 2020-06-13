@@ -4,8 +4,8 @@ import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Location {
-  final String latitude;
-  final String longitude;
+  double latitude;
+  double longitude;
 
   Location(
       [this.latitude, this.longitude]); // [ positional OPTIONAL parameters ]
@@ -21,7 +21,7 @@ class Location {
     }
   }
 
-  Future<void> getLocation() async {
+  Future<void> getCurrentLocation() async {
     // Void because there is no usable value in the Future. The usable values will be the fields of the class
     try {
       //checkLocationPermission();
@@ -30,8 +30,8 @@ class Location {
         locationPermissionLevel: GeolocationPermission.locationWhenInUse,
       );
 
-      var latitude = position.latitude;
-      var longitude = position.longitude;
+      latitude = position.latitude; // they must be double
+      longitude = position.longitude;
       print(latitude);
       print(longitude);
     } catch (e) {
