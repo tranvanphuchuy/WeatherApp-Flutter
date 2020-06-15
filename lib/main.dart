@@ -17,6 +17,9 @@ class WeatherApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: kPrimaryBlueColor,
         scaffoldBackgroundColor: kPrimaryBlueColor,
+        textTheme: TextTheme(
+            bodyText2:
+                TextStyle(color: Colors.white, fontFamily: 'Montserrat')),
       ),
       initialRoute: LoadingScreen.id,
       routes: {

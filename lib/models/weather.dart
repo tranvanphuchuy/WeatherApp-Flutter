@@ -4,7 +4,8 @@ import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:weatherApp_rffrench/models/location.dart';
 
 class Weather {
-  String apiKey = DotEnv().env['APIKEY'];
+  String apiKey =
+      DotEnv().env['APIKEY']; // API Key stored safely in a .env file
   String openWeatherURL = 'https://api.openweathermap.org/data/2.5/onecall';
   String tempUnit = 'metric';
 
@@ -15,7 +16,7 @@ class Weather {
 
     try {
       dynamic weatherData = await NetworkService().fetchAPI(
-          '$openWeatherURL?lat=${location.latitude}&lon=${location.longitude}&appid=$apiKey&units=$tempUnit');
+          '$openWeatherURL?lat=${location.latitude}&lon=${location.longitude}&exclude=hourly,minutely&appid=$apiKey&units=$tempUnit');
       return weatherData;
     } catch (e) {
       print(e);

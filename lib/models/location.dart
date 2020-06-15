@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -37,5 +35,16 @@ class Location {
     } catch (e) {
       print(e);
     }
+  }
+
+  Future<Placemark> getLocationName() async {
+    Location location = Location();
+    await location
+        .getCurrentLocation(); // Saving lat and lon in the location object
+
+    List<Placemark> placemarksList = await Geolocator()
+        .placemarkFromCoordinates(location.latitude, location.longitude);
+    Placemark placemark = placemarksList.first; // Returns a list of Placemarks
+    return placemark;
   }
 }
