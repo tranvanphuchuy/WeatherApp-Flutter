@@ -27,3 +27,4 @@ const kMonths = {
 }; // Map of months by number
 
 const Color kPrimaryBlueColor = Color(0xFF10103A);
+const Color kWeatherCardColor = Color(0xFF1E1F45);

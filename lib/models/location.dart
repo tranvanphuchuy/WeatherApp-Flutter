@@ -1,6 +1,7 @@
 import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:geolocator/geolocator.dart';
 
+//TODO: Fix location permission bugs
 class Location {
   double latitude;
   double longitude;
