@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weatherApp_rffrench/models/daily_weather.dart';
 import 'package:weatherApp_rffrench/models/location.dart';
+import 'package:weatherApp_rffrench/models/weather.dart';
 import 'package:weatherApp_rffrench/utilities/constants.dart';
 import 'package:weatherApp_rffrench/widgets/daily_weather_card.dart';
 
@@ -32,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
   var minTempDouble;
   dynamic maxTemp;
   dynamic minTemp;
+  int todayCondition = 999; // Icon will be N/A while loading
   List<DailyWeather> dailyWeatherCards = [];
 
   @override
@@ -42,6 +44,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void updateWeather(dynamic weatherData) async {
+    //TODO: Change this and code exceptions
     if (weatherData == null) {
       currentTemp = 0;
       maxTemp = 0;
@@ -82,6 +85,7 @@ class _MainScreenState extends State<MainScreen> {
     maxTemp = maxTempDouble.round();
     minTempDouble = weatherData['daily'][0]['temp']['min'];
     minTemp = minTempDouble.round();
+    todayCondition = weatherData['current']['weather'][0]['id'];
   }
 
   void getDailyWeather(dynamic weatherData) {
@@ -131,10 +135,10 @@ class _MainScreenState extends State<MainScreen> {
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(
-                    Icons.wb_sunny,
-                    color: Colors.white,
-                    size: 35,
+                  Image(
+                    image: Weather().getWeatherIcon(todayCondition),
+                    width: 35,
+                    height: 35,
                   ),
                   SizedBox(width: 10),
                   Column(

@@ -29,15 +29,32 @@ class DailyWeatherCard extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(weekday),
-              Text(
-                Weather().getWeatherIcon(conditionWeather),
+              Expanded(
+                flex: 1,
+                child: Text(
+                  weekday,
+                  style: kDailyCardStyle,
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Image(
+                  image: Weather().getWeatherIcon(conditionWeather),
+                  width: 20,
+                  height: 20,
+                ),
               ),
               Row(
                 children: <Widget>[
-                  Text('${maxTemp.toString()} °C'),
+                  Text(
+                    '${maxTemp.toString()} °C',
+                    style: kDailyCardStyle,
+                  ),
                   SizedBox(width: 15),
-                  Text('${minTemp.toString()} °C'),
+                  Text(
+                    '${minTemp.toString()} °C',
+                    style: kDailyCardStyle,
+                  ),
                 ],
               ),
             ],

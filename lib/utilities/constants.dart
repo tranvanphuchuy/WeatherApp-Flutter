@@ -28,3 +28,4 @@ const kMonths = {
 
 const Color kPrimaryBlueColor = Color(0xFF10103A);
 const Color kWeatherCardColor = Color(0xFF1E1F45);
+const TextStyle kDailyCardStyle = TextStyle(fontSize: 15);

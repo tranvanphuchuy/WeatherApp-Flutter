@@ -23,23 +23,24 @@ class Weather {
     }
   }
 
-  String getWeatherIcon(int condition) {
+// ICONS by: MeteoIcons
+  AssetImage getWeatherIcon(int condition) {
     if (condition < 300) {
-      return '🌩';
+      return AssetImage('images/thunderstorm.png');
     } else if (condition < 400) {
-      return '🌧';
+      return AssetImage('images/drizzle.png');
     } else if (condition < 600) {
-      return '☔️';
+      return AssetImage('images/rain.png');
     } else if (condition < 700) {
-      return '☃️';
+      return AssetImage('images/snow.png');
     } else if (condition < 800) {
-      return '🌫';
+      return AssetImage('images/mist.png');
     } else if (condition == 800) {
-      return '☀️';
+      return AssetImage('images/sunny.png');
     } else if (condition <= 804) {
-      return '☁️';
+      return AssetImage('images/clouds.png');
     } else {
-      return '🤷‍';
+      return AssetImage('images/none.png');
     }
   }
 }
