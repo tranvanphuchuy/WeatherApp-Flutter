@@ -6,6 +6,7 @@ import 'package:weatherApp_rffrench/models/weather.dart';
 import 'package:weatherApp_rffrench/utilities/constants.dart';
 import 'package:weatherApp_rffrench/widgets/daily_weather_card.dart';
 
+//TODO: Disable back button to loading screen
 class MainScreen extends StatefulWidget {
   static const String id = '/main_screen';
   final dynamic weatherData;

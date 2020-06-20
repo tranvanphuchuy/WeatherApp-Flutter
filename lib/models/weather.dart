@@ -24,6 +24,8 @@ class Weather {
   }
 
 // ICONS by: MeteoIcons
+
+//TODO: Edit values. Add accuracy
   AssetImage getWeatherIcon(int condition) {
     if (condition < 300) {
       return AssetImage('images/thunderstorm.png');

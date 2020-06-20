@@ -33,7 +33,7 @@ class DailyWeatherCard extends StatelessWidget {
                 flex: 1,
                 child: Text(
                   weekday,
-                  style: kDailyCardStyle,
+                  style: TextStyle(fontSize: 15),
                 ),
               ),
               Expanded(
@@ -48,12 +48,12 @@ class DailyWeatherCard extends StatelessWidget {
                 children: <Widget>[
                   Text(
                     '${maxTemp.toString()} °C',
-                    style: kDailyCardStyle,
+                    style: kMaxTempStyle,
                   ),
                   SizedBox(width: 15),
                   Text(
                     '${minTemp.toString()} °C',
-                    style: kDailyCardStyle,
+                    style: kMinTempStyle,
                   ),
                 ],
               ),
