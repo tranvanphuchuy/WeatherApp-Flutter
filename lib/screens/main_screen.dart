@@ -3,6 +3,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:weatherApp_rffrench/models/daily_weather.dart';
 import 'package:weatherApp_rffrench/models/location.dart';
 import 'package:weatherApp_rffrench/models/weather.dart';
+import 'package:weatherApp_rffrench/screens/change_location_screen.dart';
 import 'package:weatherApp_rffrench/utilities/constants.dart';
 import 'package:weatherApp_rffrench/widgets/daily_weather_card.dart';
 
@@ -114,6 +115,11 @@ class _MainScreenState extends State<MainScreen> {
           'Weather App',
           style: TextStyle(fontFamily: 'Dosis', fontSize: 22),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.near_me),
+          color: Colors.white,
+          onPressed: () {},
+        ),
         actions: <Widget>[
           IconButton(
               icon: Icon(
@@ -122,7 +128,19 @@ class _MainScreenState extends State<MainScreen> {
                 size: 25,
               ),
               onPressed: () {
-                print('search button');
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (BuildContext context) => SingleChildScrollView(
+                    child: Container(
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom),
+                      child: ChangeLocationScreen(
+                        changeLocationCallback: (String newLocation) {},
+                      ),
+                    ),
+                  ),
+                );
               }),
         ],
         automaticallyImplyLeading: false,
