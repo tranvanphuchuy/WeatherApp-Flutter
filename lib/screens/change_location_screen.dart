@@ -3,12 +3,13 @@ import 'package:weatherApp_rffrench/utilities/constants.dart';
 
 class ChangeLocationScreen extends StatelessWidget {
   final Function changeLocationCallback;
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
 
   ChangeLocationScreen({@required this.changeLocationCallback});
 
   @override
   Widget build(BuildContext context) {
+    String locationName;
     return Container(
       // First container which is invisible
       color: kPrimaryBlueColor,
@@ -33,6 +34,9 @@ class ChangeLocationScreen extends StatelessWidget {
                 maxLength: 40,
                 textCapitalization: TextCapitalization.words,
                 style: TextStyle(color: Colors.white, fontFamily: 'Dosis'),
+                onChanged: (newLocation) {
+                  locationName = newLocation;
+                },
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search,
@@ -61,7 +65,9 @@ class ChangeLocationScreen extends StatelessWidget {
                 'Change Location',
                 style: TextStyle(fontSize: 15),
               ),
-              onPressed: () {},
+              onPressed: () {
+                changeLocationCallback(locationName);
+              },
             ),
           ],
         ),

@@ -40,12 +40,13 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    updateWeather(widget.weatherData);
+    updateWeather(
+        widget.weatherData, null); // The second argument is a new location.
     super.initState();
     print(widget.weatherData);
   }
 
-  void updateWeather(dynamic weatherData) async {
+  void updateWeather(dynamic weatherData, String newLocation) async {
     //TODO: Change this and code exceptions
     if (weatherData == null) {
       currentTemp = 0;
@@ -53,9 +54,11 @@ class _MainScreenState extends State<MainScreen> {
       minTemp = 0;
       locality = '';
       country = '';
-      throw Exception('Weather Data not available');
+      dailyWeatherCards.clear();
     } else {
-      await setLocationName(); // Must await or it will return null values in the UI
+      await setLocationName(
+          newLocation); // Must await or it will return null values in the UI
+      dailyWeatherCards.clear();
       setState(() {
         getTodayWeather(weatherData); // Current and today's weather
         getDailyWeather(weatherData); // Daily forecast
@@ -63,9 +66,9 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Future<void> setLocationName() async {
-    Placemark placemark = await Location()
-        .getLocationName(); // Getting the location name by coordinates
+  Future<void> setLocationName(String newLocation) async {
+    Placemark placemark = await Location().getLocationName(
+        newLocation); // Getting the location name by coordinates
 
     locality = placemark.locality;
     country = placemark.country;
@@ -118,7 +121,14 @@ class _MainScreenState extends State<MainScreen> {
         leading: IconButton(
           icon: Icon(Icons.near_me),
           color: Colors.white,
-          onPressed: () {},
+          onPressed: () async {
+            // Returning the current location weather
+            dynamic newWeatherData =
+                await Weather().getCurrentLocationWeather();
+            setState(() {
+              updateWeather(newWeatherData, null);
+            });
+          },
         ),
         actions: <Widget>[
           IconButton(
@@ -136,7 +146,14 @@ class _MainScreenState extends State<MainScreen> {
                       padding: EdgeInsets.only(
                           bottom: MediaQuery.of(context).viewInsets.bottom),
                       child: ChangeLocationScreen(
-                        changeLocationCallback: (String newLocation) {},
+                        changeLocationCallback: (String newLocation) async {
+                          dynamic newWeatherData = await Weather()
+                              .getNamedLocationWeather(newLocation);
+                          setState(() {
+                            updateWeather(newWeatherData, newLocation);
+                          });
+                          Navigator.pop(context);
+                        },
                       ),
                     ),
                   ),

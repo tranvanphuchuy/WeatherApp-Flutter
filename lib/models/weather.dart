@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:weatherApp_rffrench/models/location.dart';
 
+//TODO: Handle exceptions in every part of the app
 class Weather {
   String apiKey =
       DotEnv().env['APIKEY']; // API Key stored safely in a .env file
@@ -23,7 +25,20 @@ class Weather {
     }
   }
 
-// ICONS by: MeteoIcons
+  Future<dynamic> getNamedLocationWeather(String newLocation) async {
+    Position position = await Location().getLocationCoordinates(newLocation);
+
+    try {
+      dynamic weatherData = await NetworkService().fetchAPI(
+          '$openWeatherURL?lat=${position.latitude}&lon=${position.longitude}&exclude=hourly,minutely&appid=$apiKey&units=$tempUnit');
+      return weatherData;
+    } catch (e) {
+      print(e);
+      //throw Exception('Error fetching API by named location');
+    }
+  }
+
+// ICONS by: MeteoIcons. http://www.alessioatzeni.com/meteocons/
 
 //TODO: Edit values. Add accuracy
   AssetImage getWeatherIcon(int condition) {
