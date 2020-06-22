@@ -12,12 +12,12 @@ You can clone it if you want! If you are going to do something else with it at l
 
 # Screenshots
 
-<div>GIF Demo
+<div><h6>GIF Demo</h6>
 <img src="https://github.com/Rffrench/WeatherApp-Flutter/blob/master/images/app-demo/weather-app-flutter.gif" width="20%"></div>
-<div>Loading Screen
+<div><h6>Loading Screen</h6>
 <img src="https://github.com/Rffrench/WeatherApp-Flutter/blob/master/images/app-demo/loading-screen.png" width="20%"></div>
-<div>Main Screen
+<div><h6>Main Screen</h6>
 <img src="https://github.com/Rffrench/WeatherApp-Flutter/blob/master/images/app-demo/main-screen.png" width="20%"></div>
-<div>Change Location
+<div><h6>Change Location</h6>
 <img src="https://github.com/Rffrench/WeatherApp-Flutter/blob/master/images/app-demo/change-location.png" width="20%"></div>
 
