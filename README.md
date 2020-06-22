@@ -1,4 +1,4 @@
-# WeatherApp-Flutter
+# WeatherApp using Flutter
 This is a personal project I have created which is a Weather app using Dart &amp; Flutter and the OpenWeather API. It technically has only 2 screens and 1 modal sheet. 
 
 The first is a Loading Screen with a Spinner and the other is the the main screen which displays the weather and more information: a 7 days forecast, the date, the location, max and min temperatures and an icon representing the weather condition. 
