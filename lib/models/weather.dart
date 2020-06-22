@@ -3,6 +3,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weatherApp_rffrench/services/networking.dart';
 import 'package:weatherApp_rffrench/models/location.dart';
+import 'package:weatherApp_rffrench/utilities/constants.dart';
+
+import 'daily_weather.dart';
 
 //TODO: Handle exceptions in every part of the app
 class Weather {
@@ -10,6 +13,16 @@ class Weather {
       DotEnv().env['APIKEY']; // API Key stored safely in a .env file
   String openWeatherURL = 'https://api.openweathermap.org/data/2.5/onecall';
   String tempUnit = 'metric';
+  List<DailyWeather> dailyWeatherCards = [];
+  var currentTempDouble; // var because when the weather is not double it will be an int. E.g: 9°C
+  dynamic
+      currentTemp; // dynamic because it will start as double and then will be casted to int
+  var maxTempDouble;
+  var minTempDouble;
+  dynamic maxTemp;
+  dynamic minTemp;
+  int todayCondition = 999; // Icon will be N/A while loading
+  dynamic todayEpoch;
 
   Future<dynamic> getCurrentLocationWeather() async {
     Location location = Location();
@@ -36,6 +49,40 @@ class Weather {
       print(e);
       //throw Exception('Error fetching API by named location');
     }
+  }
+
+  void getDailyWeather(dynamic weatherData) {
+    List<dynamic> jsonDays = weatherData['daily']; // List of days from JSON
+    jsonDays.forEach((day) {
+      //Generating a DailyWeather instance for each day so later the widget cards can be created
+      dailyWeatherCards.add(
+        DailyWeather(
+          weekday: kWeekdays[
+              DateTime.fromMillisecondsSinceEpoch(day['dt'] * 1000).weekday],
+          conditionWeather: day['weather'][0]['id'],
+          maxTemp:
+              day['temp']['max'].round(), // dynamic data type. No need to cast
+          minTemp: day['temp']['min'].round(),
+        ),
+      );
+    });
+  }
+
+  void getTodayWeather(dynamic weatherData) {
+    // * 1000 Because the API returns the epoch
+    todayEpoch = DateTime.fromMillisecondsSinceEpoch(
+        weatherData['current']['dt'] * 1000);
+
+    currentTempDouble = weatherData['current']['temp'];
+    currentTemp = double.parse((currentTempDouble)
+        .toStringAsFixed(1)); // THis is not neccesary anymore
+    currentTemp = currentTemp.round();
+
+    maxTempDouble = weatherData['daily'][0]['temp']['max'];
+    maxTemp = maxTempDouble.round();
+    minTempDouble = weatherData['daily'][0]['temp']['min'];
+    minTemp = minTempDouble.round();
+    todayCondition = weatherData['current']['weather'][0]['id'];
   }
 
 // ICONS by: MeteoIcons. http://www.alessioatzeni.com/meteocons/

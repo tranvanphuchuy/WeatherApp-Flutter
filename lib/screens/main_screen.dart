@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:weatherApp_rffrench/models/daily_weather.dart';
 import 'package:weatherApp_rffrench/models/location.dart';
 import 'package:weatherApp_rffrench/models/weather.dart';
@@ -17,26 +18,19 @@ class MainScreen extends StatefulWidget {
   _MainScreenState createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
-  dynamic todayEpoch;
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
+  bool isLoading =
+      false; // Variable that will be used to tell if something is being loaded
+  String locality;
+  String country;
+  Weather weather = Weather();
   String todayString =
       kWeekdays[DateTime.now().weekday.toInt()].substring(0, 3) +
           ', ' +
           DateTime.now().day.toString() +
           ' ' +
           kMonths[DateTime.now().month].substring(0, 3);
-
-  var currentTempDouble; // var because when the weather is not double it will be an int. E.g: 9°C
-  dynamic
-      currentTemp; // dynamic because it will start as double and then will be casted to int
-  String locality;
-  String country;
-  var maxTempDouble;
-  var minTempDouble;
-  dynamic maxTemp;
-  dynamic minTemp;
-  int todayCondition = 999; // Icon will be N/A while loading
-  List<DailyWeather> dailyWeatherCards = [];
 
   @override
   void initState() {
@@ -49,21 +43,22 @@ class _MainScreenState extends State<MainScreen> {
   void updateWeather(dynamic weatherData, String newLocation) async {
     //TODO: Change this and code exceptions
     if (weatherData == null) {
-      currentTemp = 0;
-      maxTemp = 0;
-      minTemp = 0;
+      weather.currentTemp = 0;
+      weather.maxTemp = 0;
+      weather.minTemp = 0;
       locality = '';
       country = '';
-      dailyWeatherCards.clear();
+      weather.dailyWeatherCards.clear();
     } else {
       await setLocationName(
           newLocation); // Must await or it will return null values in the UI
-      dailyWeatherCards.clear();
+      weather.dailyWeatherCards.clear();
       setState(() {
-        getTodayWeather(weatherData); // Current and today's weather
-        getDailyWeather(weatherData); // Daily forecast
+        weather.getTodayWeather(weatherData); // Current and today's weather
+        weather.getDailyWeather(weatherData); // Daily forecast
       });
     }
+    isLoading = false;
   }
 
   Future<void> setLocationName(String newLocation) async {
@@ -76,38 +71,25 @@ class _MainScreenState extends State<MainScreen> {
     print('Country: ' + placemark.country);
   }
 
-  void getTodayWeather(dynamic weatherData) {
-    // * 1000 Because the API returns the epoch
-    todayEpoch = DateTime.fromMillisecondsSinceEpoch(
-        weatherData['current']['dt'] * 1000);
-
-    currentTempDouble = weatherData['current']['temp'];
-    currentTemp = double.parse((currentTempDouble)
-        .toStringAsFixed(1)); // THis is not neccesary anymore
-    currentTemp = currentTemp.round();
-
-    maxTempDouble = weatherData['daily'][0]['temp']['max'];
-    maxTemp = maxTempDouble.round();
-    minTempDouble = weatherData['daily'][0]['temp']['min'];
-    minTemp = minTempDouble.round();
-    todayCondition = weatherData['current']['weather'][0]['id'];
-  }
-
-  void getDailyWeather(dynamic weatherData) {
-    List<dynamic> jsonDays = weatherData['daily']; // List of days from JSON
-    jsonDays.forEach((day) {
-      //Generating a DailyWeather instance for each day so later the widget cards can be created
-      dailyWeatherCards.add(
-        DailyWeather(
-          weekday: kWeekdays[
-              DateTime.fromMillisecondsSinceEpoch(day['dt'] * 1000).weekday],
-          conditionWeather: day['weather'][0]['id'],
-          maxTemp:
-              day['temp']['max'].round(), // dynamic data type. No need to cast
-          minTemp: day['temp']['min'].round(),
-        ),
-      );
+  Widget _setLoadingIcon() {
+    // This method will make a loading icon visible if the user taps on the button
+    Widget loadingIcon;
+    setState(() {
+      if (isLoading) {
+        loadingIcon = Container(
+          alignment: Alignment.bottomRight,
+          width: 10,
+          height: 10,
+          child: LoadingIndicator(
+            indicatorType: Indicator.circleStrokeSpin,
+            color: Colors.white,
+          ),
+        );
+      } else {
+        loadingIcon = null;
+      }
     });
+    return loadingIcon;
   }
 
   @override
@@ -122,9 +104,12 @@ class _MainScreenState extends State<MainScreen> {
           icon: Icon(Icons.near_me),
           color: Colors.white,
           onPressed: () async {
+            setState(() {
+              // Set state first so the loading icon can be shown
+              isLoading = true;
+            });
             // Returning the current location weather
-            dynamic newWeatherData =
-                await Weather().getCurrentLocationWeather();
+            dynamic newWeatherData = await weather.getCurrentLocationWeather();
             setState(() {
               updateWeather(newWeatherData, null);
             });
@@ -147,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                           bottom: MediaQuery.of(context).viewInsets.bottom),
                       child: ChangeLocationScreen(
                         changeLocationCallback: (String newLocation) async {
-                          dynamic newWeatherData = await Weather()
+                          dynamic newWeatherData = await weather
                               .getNamedLocationWeather(newLocation);
                           setState(() {
                             updateWeather(newWeatherData, newLocation);
@@ -167,12 +152,19 @@ class _MainScreenState extends State<MainScreen> {
         shrinkWrap: true,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            padding: EdgeInsets.only(
+              top: 10,
+              right: 10,
+            ),
+            child: _setLoadingIcon(),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 15.0),
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Image(
-                    image: Weather().getWeatherIcon(todayCondition),
+                    image: weather.getWeatherIcon(weather.todayCondition),
                     width: 35,
                     height: 35,
                   ),
@@ -201,7 +193,7 @@ class _MainScreenState extends State<MainScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                currentTemp.toString(),
+                weather.currentTemp.toString(),
                 style: TextStyle(
                   fontSize: 70,
                 ),
@@ -235,9 +227,9 @@ class _MainScreenState extends State<MainScreen> {
                     size: 20,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Text(
-                      '${maxTemp.toString()}°C',
+                      '${weather.maxTemp.toString()}°C',
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -262,9 +254,9 @@ class _MainScreenState extends State<MainScreen> {
                     size: 20,
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(5.0),
                     child: Text(
-                      '${minTemp.toString()}°C',
+                      '${weather.minTemp.toString()}°C',
                       style: TextStyle(
                         fontSize: 16,
                       ),
@@ -278,14 +270,15 @@ class _MainScreenState extends State<MainScreen> {
           ListView.builder(
             shrinkWrap: true, // needed because its inside another ListView
             physics: ClampingScrollPhysics(), // same
-            itemCount: dailyWeatherCards.length,
+            itemCount: weather.dailyWeatherCards.length,
             itemBuilder: (context, index) {
               // Creating the cards
               return DailyWeatherCard(
-                  weekday: dailyWeatherCards[index].weekday,
-                  conditionWeather: dailyWeatherCards[index].conditionWeather,
-                  maxTemp: dailyWeatherCards[index].maxTemp,
-                  minTemp: dailyWeatherCards[index].minTemp);
+                  weekday: weather.dailyWeatherCards[index].weekday,
+                  conditionWeather:
+                      weather.dailyWeatherCards[index].conditionWeather,
+                  maxTemp: weather.dailyWeatherCards[index].maxTemp,
+                  minTemp: weather.dailyWeatherCards[index].minTemp);
             },
           ),
         ],

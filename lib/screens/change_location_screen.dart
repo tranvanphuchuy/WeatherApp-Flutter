@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:loading_indicator/loading_indicator.dart';
 import 'package:weatherApp_rffrench/utilities/constants.dart';
 
-class ChangeLocationScreen extends StatelessWidget {
+class ChangeLocationScreen extends StatefulWidget {
   final Function changeLocationCallback;
-  final TextEditingController _textFieldController = TextEditingController();
 
   ChangeLocationScreen({@required this.changeLocationCallback});
 
   @override
+  _ChangeLocationScreenState createState() => _ChangeLocationScreenState();
+}
+
+class _ChangeLocationScreenState extends State<ChangeLocationScreen> {
+  final TextEditingController _textFieldController = TextEditingController();
+  bool isLoading =
+      false; // Variable that will be used to tell if something is being loaded
+
+  Widget _setLoadingIcon() {
+    // This method will make a loading icon visible if the user taps on the button
+    Widget loadingIcon;
+    setState(() {
+      if (isLoading) {
+        loadingIcon = Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: LoadingIndicator(
+              indicatorType: Indicator.circleStrokeSpin,
+              color: Colors.white,
+            ));
+      } else {
+        loadingIcon = null;
+      }
+    });
+    return loadingIcon;
+  }
+
+  @override
   Widget build(BuildContext context) {
     String locationName;
+
     return Container(
       // First container which is invisible
       color: kPrimaryBlueColor,
@@ -24,14 +52,13 @@ class ChangeLocationScreen extends StatelessWidget {
         ),
         child: Column(
           children: <Widget>[
-            Text('Enter the location name'),
+            Text('Enter the new location name:'),
             Padding(
-              padding: const EdgeInsets.only(top: 18.0, bottom: 5),
+              padding: const EdgeInsets.only(top: 18.0, bottom: 20),
               child: TextField(
                 cursorColor: Colors.white,
                 controller: _textFieldController,
                 autofocus: true,
-                maxLength: 40,
                 textCapitalization: TextCapitalization.words,
                 style: TextStyle(color: Colors.white, fontFamily: 'Dosis'),
                 onChanged: (newLocation) {
@@ -42,6 +69,8 @@ class ChangeLocationScreen extends StatelessWidget {
                     Icons.search,
                     color: Colors.white,
                   ),
+                  suffixIcon: _setLoadingIcon(),
+                  suffixIconConstraints: BoxConstraints(maxHeight: 15),
                   filled: true,
                   fillColor: kWeatherCardColor,
                   contentPadding: EdgeInsets.all(5),
@@ -66,7 +95,12 @@ class ChangeLocationScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 15),
               ),
               onPressed: () {
-                changeLocationCallback(locationName);
+                locationName != null
+                    ? setState(() {
+                        isLoading = true;
+                        widget.changeLocationCallback(locationName);
+                      })
+                    : print('null');
               },
             ),
           ],
