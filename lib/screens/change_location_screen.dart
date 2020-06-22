@@ -40,7 +40,7 @@ class _ChangeLocationScreenState extends State<ChangeLocationScreen> {
 
     return Container(
       // First container which is invisible
-      color: kPrimaryBlueColor,
+      color: Color(0xFF000000),
       child: Container(
         padding: EdgeInsets.all(25),
         decoration: BoxDecoration(

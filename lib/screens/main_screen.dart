@@ -76,14 +76,9 @@ class _MainScreenState extends State<MainScreen>
     Widget loadingIcon;
     setState(() {
       if (isLoading) {
-        loadingIcon = Container(
-          alignment: Alignment.bottomRight,
-          width: 10,
-          height: 10,
-          child: LoadingIndicator(
-            indicatorType: Indicator.circleStrokeSpin,
-            color: Colors.white,
-          ),
+        loadingIcon = LoadingIndicator(
+          indicatorType: Indicator.circleStrokeSpin,
+          color: Colors.white,
         );
       } else {
         loadingIcon = null;
@@ -153,10 +148,15 @@ class _MainScreenState extends State<MainScreen>
         children: <Widget>[
           Padding(
             padding: EdgeInsets.only(
-              top: 10,
+              top: 5,
               right: 10,
             ),
-            child: _setLoadingIcon(),
+            child: Container(
+              alignment: Alignment.bottomRight,
+              width: 10,
+              height: 10,
+              child: _setLoadingIcon(),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 15.0),
