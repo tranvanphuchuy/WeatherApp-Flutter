@@ -30,47 +30,49 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: kPrimaryBlueColor,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 10,
-            child: Center(
-              child: Container(
-                // Loading icon will be 1/4 of the width
-                width: MediaQuery.of(context).size.width / 4,
-                child: LoadingIndicator(
-                  indicatorType: Indicator.ballScaleRippleMultiple,
-                  color: Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: kPrimaryBlueColor,
+        body: Column(
+          children: <Widget>[
+            Expanded(
+              flex: 10,
+              child: Center(
+                child: Container(
+                  // Loading icon will be 1/4 of the width
+                  width: MediaQuery.of(context).size.width / 4,
+                  child: LoadingIndicator(
+                    indicatorType: Indicator.ballScaleRippleMultiple,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(right: 5.0),
-                  child: Image(
-                    image: AssetImage('images/github.png'),
-                    width: 22,
-                    height: 22,
+            Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Image(
+                      image: AssetImage('images/github.png'),
+                      width: 22,
+                      height: 22,
+                    ),
                   ),
-                ),
-                Text('Rffrench',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontFamily: 'Dosis',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                    )),
-              ],
+                  Text('Rffrench',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Dosis',
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      )),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
