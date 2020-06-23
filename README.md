@@ -14,10 +14,7 @@ To get the weather information I used the OpenWeatherMap OneCall API which is fr
 
 
 
-* Get yourself inside a folder an initialize the folder as a git repo:
-`git init`
-
-* Now clone the app with:
+* Get yourself inside a folder and clone the app with:
 `git clone https://github.com/Rffrench/WeatherApp-Flutter.git`
 
 * Head to: https://openweathermap.org/ and click in the menu item "API" then where it says "One Call API" click on "Subscribe". Now you should be in the Plan selection page so head to "Free" and click on "Get API Key", complete the registration, confirm you email and Sign In. Once you are logged in click on "API Keys" and copy the key. If you don't see any key just repeat the first steps. 
