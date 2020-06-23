@@ -23,7 +23,7 @@ To get the weather information I used the OpenWeatherMap OneCall API which is fr
 * Head to: https://openweathermap.org/ and click in the menu item "API" then where it says "One Call API" click on "Subscribe". Now you should be in the Plan selection page so head to "Free" and click on "Get API Key", complete the registration, confirm you email and Sign In. Once you are logged in click on "API Keys" and copy the key. If you don't see any key just repeat the first steps. 
 **NOTE: It's important that you get the One Call API key, if you get one of a different category the app won't work!**
 
-* Open the folder it has just been created called WeatherApp-FLutter with your favorite IDE (preferably VS Code) and inside this folder create a file called '.env' (don't include the ' '). Make sure the file is inside the **folder**!
+* Open the folder it has just been created called WeatherApp-FLutter with your favorite IDE (preferably VS Code) and inside this folder create a file called '_.env_' (don't include the ' '). Make sure the file is inside the **folder**!
 
 * Inside this file type the following:
 `APIKEY=ABC123`
