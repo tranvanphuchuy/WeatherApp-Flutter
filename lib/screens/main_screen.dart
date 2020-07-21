@@ -89,201 +89,205 @@ class _MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Weather App',
-            style: TextStyle(fontFamily: 'Dosis', fontSize: 22),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.near_me),
-            color: Colors.white,
-            onPressed: () async {
-              setState(() {
-                // Set state first so the loading icon can be shown
-                isLoading = true;
-              });
-              // Returning the current location weather
-              dynamic newWeatherData =
-                  await weather.getCurrentLocationWeather();
-              setState(() {
-                updateWeather(newWeatherData, null);
-              });
-            },
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 25,
-                ),
-                onPressed: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) => SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            bottom: MediaQuery.of(context).viewInsets.bottom),
-                        child: ChangeLocationScreen(
-                          changeLocationCallback: (String newLocation) async {
-                            dynamic newWeatherData = await weather
-                                .getNamedLocationWeather(newLocation);
-                            setState(() {
-                              updateWeather(newWeatherData, newLocation);
-                            });
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-          ],
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-        ),
-        body: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                top: 5,
-                right: 10,
-              ),
-              child: Container(
-                alignment: Alignment.bottomRight,
-                width: 10,
-                height: 10,
-                child: _setLoadingIcon(),
-              ),
+    return WillPopScope(
+      // WillPopScope will prevent users from going back
+      onWillPop: () async => false, // required to block back button
+      child: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              'Weather App',
+              style: TextStyle(fontFamily: 'Dosis', fontSize: 22),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 15.0),
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Image(
-                      image: weather.getWeatherIcon(weather.todayCondition),
-                      width: 35,
-                      height: 35,
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          'Today',
-                          style: TextStyle(
-                              fontFamily: 'Dosis',
-                              fontSize: 25,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          todayString,
-                          style: TextStyle(fontWeight: FontWeight.w300),
-                        ),
-                      ],
-                    ),
-                  ]),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  weather.currentTemp.toString(),
-                  style: TextStyle(
-                    fontSize: 70,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 18.0),
-                  child: Text(
-                    '°C',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Center(
-              child: Text(
-                '$locality, $country',
-                style: TextStyle(fontWeight: FontWeight.w300),
-              ),
-            ),
-            SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.arrow_upward,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        '${weather.maxTemp.toString()}°C',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(width: 15),
-                Text(
-                  '•',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                  ),
-                ),
-                SizedBox(width: 18),
-                Row(
-                  children: <Widget>[
-                    Icon(
-                      Icons.arrow_downward,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Text(
-                        '${weather.minTemp.toString()}°C',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            ListView.builder(
-              shrinkWrap: true, // needed because its inside another ListView
-              physics: ClampingScrollPhysics(), // same
-              itemCount: weather.dailyWeatherCards.length,
-              itemBuilder: (context, index) {
-                // Creating the cards
-                return DailyWeatherCard(
-                    weekday: weather.dailyWeatherCards[index].weekday,
-                    conditionWeather:
-                        weather.dailyWeatherCards[index].conditionWeather,
-                    maxTemp: weather.dailyWeatherCards[index].maxTemp,
-                    minTemp: weather.dailyWeatherCards[index].minTemp);
+            leading: IconButton(
+              icon: Icon(Icons.near_me),
+              color: Colors.white,
+              onPressed: () async {
+                setState(() {
+                  // Set state first so the loading icon can be shown
+                  isLoading = true;
+                });
+                // Returning the current location weather
+                dynamic newWeatherData =
+                    await weather.getCurrentLocationWeather();
+                setState(() {
+                  updateWeather(newWeatherData, null);
+                });
               },
             ),
-          ],
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (BuildContext context) => SingleChildScrollView(
+                        child: Container(
+                          padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom),
+                          child: ChangeLocationScreen(
+                            changeLocationCallback: (String newLocation) async {
+                              dynamic newWeatherData = await weather
+                                  .getNamedLocationWeather(newLocation);
+                              setState(() {
+                                updateWeather(newWeatherData, newLocation);
+                              });
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
+            ],
+            automaticallyImplyLeading: false,
+            centerTitle: true,
+          ),
+          body: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                  top: 5,
+                  right: 10,
+                ),
+                child: Container(
+                  alignment: Alignment.bottomRight,
+                  width: 10,
+                  height: 10,
+                  child: _setLoadingIcon(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 15.0),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Image(
+                        image: weather.getWeatherIcon(weather.todayCondition),
+                        width: 35,
+                        height: 35,
+                      ),
+                      SizedBox(width: 10),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Today',
+                            style: TextStyle(
+                                fontFamily: 'Dosis',
+                                fontSize: 25,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            todayString,
+                            style: TextStyle(fontWeight: FontWeight.w300),
+                          ),
+                        ],
+                      ),
+                    ]),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    weather.currentTemp.toString(),
+                    style: TextStyle(
+                      fontSize: 70,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 18.0),
+                    child: Text(
+                      '°C',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Text(
+                  '$locality, $country',
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                ),
+              ),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.arrow_upward,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          '${weather.maxTemp.toString()}°C',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 15),
+                  Text(
+                    '•',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                    ),
+                  ),
+                  SizedBox(width: 18),
+                  Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.arrow_downward,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          '${weather.minTemp.toString()}°C',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ListView.builder(
+                shrinkWrap: true, // needed because its inside another ListView
+                physics: ClampingScrollPhysics(), // same
+                itemCount: weather.dailyWeatherCards.length,
+                itemBuilder: (context, index) {
+                  // Creating the cards
+                  return DailyWeatherCard(
+                      weekday: weather.dailyWeatherCards[index].weekday,
+                      conditionWeather:
+                          weather.dailyWeatherCards[index].conditionWeather,
+                      maxTemp: weather.dailyWeatherCards[index].maxTemp,
+                      minTemp: weather.dailyWeatherCards[index].minTemp);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
