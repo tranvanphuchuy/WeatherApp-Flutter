@@ -65,7 +65,10 @@ class _MainScreenState extends State<MainScreen>
     Placemark placemark = await Location().getLocationName(
         newLocation); // Getting the location name by coordinates
 
-    locality = placemark.locality;
+    placemark.locality != ''
+        ? locality = placemark.locality + ', '
+        : locality =
+            ''; // Some cities do not come with locality. Here we set them to empty strings
     country = placemark.country;
     print('Locality: ' + placemark.locality);
     print('Country: ' + placemark.country);
@@ -216,7 +219,7 @@ class _MainScreenState extends State<MainScreen>
               ),
               Center(
                 child: Text(
-                  '$locality, $country',
+                  '$locality $country',
                   style: TextStyle(fontWeight: FontWeight.w300),
                 ),
               ),
